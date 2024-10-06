@@ -3,7 +3,15 @@ import AddPlantFormClient from "./AddPlantFormClient";
 
 async function getPlantTypes() {
   try {
-    const res = await fetch("http://localhost:3000/api/plants");
+    const res = await fetch(
+      `${process.env.PLANT_DATABASE_API}/Plant/get-all-plants`,
+      {
+        next: {
+          revalidate: 60,
+        },
+      },
+    );
+
     const types = (await res.json()) as PlantType[];
     return types;
   } catch (error) {

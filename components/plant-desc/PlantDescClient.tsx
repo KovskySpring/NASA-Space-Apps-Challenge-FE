@@ -75,11 +75,16 @@ export default function PlantDescClient({
           </div>
           <div className="flex flex-row items-start justify-between gap-2">
             <span className="font-bold">Location</span>
-            <span>{"<placeholder>"}</span>
+            <span>{"Ben tre"}</span>
           </div>
           <div className="flex flex-row items-start justify-between gap-2">
             <span className="font-bold">Time</span>
-            <span>{"<placeholder>"}</span>
+            <span>
+              {new Date().toLocaleString(undefined, {
+                dateStyle: "short",
+                timeStyle: "short",
+              })}
+            </span>
           </div>
           <div className="flex flex-row items-start justify-between gap-2">
             <span className="font-bold">Score</span>
@@ -269,7 +274,6 @@ function isRecommended(suitabilityScore: number) {
 function QuickRecommendation({
   suitabilityScore,
 }: Readonly<{ suitabilityScore: number }>) {
-  console.log(suitabilityScore);
   if (isRecommended(suitabilityScore)) {
     return (
       <div className="flex flex-col items-center gap-2">

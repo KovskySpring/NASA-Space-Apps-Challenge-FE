@@ -74,7 +74,7 @@ export default async function PlantDashboard() {
           <AddPlantButton />
         </div>
       </div>
-      <div className="grid h-full max-h-full flex-grow grid-cols-3 gap-4 overflow-y-auto p-4">
+      <div className="flex h-full max-h-full flex-grow flex-wrap place-content-start gap-4 overflow-y-auto p-4">
         {plantList.map(({ plantName, suitabilityScore }) => (
           <PlantItem
             key={plantName}
@@ -96,27 +96,25 @@ function PlantItem({
   return (
     <Link
       href={`/plants/${plantName}`}
-      className="w-80 rounded-md border border-solid border-gray-100 bg-white drop-shadow-md"
+      className="flex h-fit w-72 flex-col items-center justify-between rounded-md border border-solid border-gray-100 bg-white drop-shadow-md"
     >
-      <div className="flex flex-col items-center gap-2">
-        <Image
-          src="/plant-placeholder.svg"
-          alt="Plant thumbnail"
-          width={180}
-          height={180}
-        />
-        <div className="flex w-full flex-col items-stretch gap-1 bg-gray-100 p-2">
-          <span className="z-10 text-lg font-bold">{plantName}</span>
-          <div className="z-10 flex flex-row items-center justify-between">
-            <span className="text-sm font-bold">Suitability Score</span>
-            <span className="text-sm">{scoreOutOf5}/5</span>
-          </div>
-          <div className="relative h-2 w-40 rounded-sm border border-solid border-gray-500 transition-all">
-            <div
-              className="absolute left-0 top-0 z-0 h-2 w-40 rounded-sm bg-gray-500 transition-all"
-              style={{ width: 160 * suitabilityScore }}
-            />
-          </div>
+      <Image
+        src="/plant-placeholder.svg"
+        alt="Plant thumbnail"
+        width={180}
+        height={180}
+      />
+      <div className="flex w-full flex-col items-stretch gap-1 bg-gray-100 p-2">
+        <span className="z-10 text-lg font-bold">{plantName}</span>
+        <div className="z-10 flex flex-row items-center justify-between">
+          <span className="text-sm font-bold">Suitability Score</span>
+          <span className="text-sm">{scoreOutOf5}/5</span>
+        </div>
+        <div className="relative h-2 w-40 rounded-sm border border-solid border-gray-500 transition-all">
+          <div
+            className="absolute left-0 top-0 z-0 h-2 w-40 rounded-sm bg-gray-500 transition-all"
+            style={{ width: 160 * suitabilityScore }}
+          />
         </div>
       </div>
     </Link>
