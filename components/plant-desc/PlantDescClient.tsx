@@ -2,6 +2,7 @@
 
 import {
   PLANT_SPECIFICATION_LABELS,
+  type PlantSpecifications,
   type PlantSpecificationsRecordHistory,
   type PlantSpecificationsRecordKeys,
   type PlantType,
@@ -24,6 +25,8 @@ import { AsteriskIcon } from "../icons/AsteriskIcon";
 import { CancelIcon } from "../icons/CancelIcon";
 import SpecificationRecordChart from "./SpecificationRecordChart";
 import { useRouter } from "next/navigation";
+import getSuitabilityScore from "@/utils/getSuitabilityScore";
+import getCurrentPosition from "@/utils/getCurrentPosition";
 
 const SPECIFICATION_LABEL_KEYS = Object.keys(PLANT_SPECIFICATION_LABELS);
 
@@ -39,14 +42,18 @@ async function getSpecificationRecordHistory(): Promise<PlantSpecificationsRecor
 }
 
 export default function PlantDescClient({
+  desc,
   plantType,
-  suitabilityScore,
 }: Readonly<{
+  desc: PlantSpecifications;
   plantType: PlantType;
-  suitabilityScore: number;
-  // plantDesc: PlantSpecifications;
 }>) {
   const router = useRouter();
+
+  const [suitabilityScore, setSuitabilityScore] = useState(0);
+
+  const [isLoadingSuitabilityScore, setIsLoadingSuitabilityScore] =
+    useState(true);
 
   const scoreOutOf5 = useMemo(
     () => Math.fround(suitabilityScore * 5),
@@ -56,6 +63,26 @@ export default function PlantDescClient({
   const onBackButtonClicked = useCallback(() => {
     router.push("/");
   }, [router]);
+
+  useEffect(() => {
+    let aborted = false;
+    setIsLoadingSuitabilityScore(true);
+    getCurrentPosition()
+      .then((position) => {
+        if (aborted) return null;
+        return getSuitabilityScore(plantType, desc, position);
+      })
+      .then((score) => {
+        if (aborted) return;
+        if (score === null) return;
+        setSuitabilityScore(score);
+        setIsLoadingSuitabilityScore(false);
+      });
+
+    return () => {
+      aborted = true;
+    };
+  }, [desc, plantType, setIsLoadingSuitabilityScore, setSuitabilityScore]);
 
   return (
     <div className="flex h-full w-full flex-row items-stretch justify-stretch bg-white">
@@ -100,7 +127,13 @@ export default function PlantDescClient({
           </IconButton>
           <span className="font-bold">Back to search</span>
         </div>
-        <PlantDescDetailedViews suitabilityScore={suitabilityScore} />
+        {isLoadingSuitabilityScore ? (
+          <div className="flex h-full w-full items-center justify-center">
+            <span>Retrieving data...</span>
+          </div>
+        ) : (
+          <PlantDescDetailedViews suitabilityScore={suitabilityScore} />
+        )}
       </div>
     </div>
   );
