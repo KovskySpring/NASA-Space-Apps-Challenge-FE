@@ -14,7 +14,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Agri-smart",
+  title: "Salsat",
   description:
     "A smart agriculture app that helps you grow your crops by weighting data retrieved from NASA's satellites and sensors.",
 };
