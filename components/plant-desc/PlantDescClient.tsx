@@ -23,6 +23,7 @@ import SimpleBox from "../box/SimpleBox";
 import { AsteriskIcon } from "../icons/AsteriskIcon";
 import { CancelIcon } from "../icons/CancelIcon";
 import SpecificationRecordChart from "./SpecificationRecordChart";
+import { useRouter } from "next/navigation";
 
 const SPECIFICATION_LABEL_KEYS = Object.keys(PLANT_SPECIFICATION_LABELS);
 
@@ -45,10 +46,16 @@ export default function PlantDescClient({
   suitabilityScore: number;
   // plantDesc: PlantSpecifications;
 }>) {
+  const router = useRouter();
+
   const scoreOutOf5 = useMemo(
     () => Math.fround(suitabilityScore * 5),
     [suitabilityScore],
   );
+
+  const onBackButtonClicked = useCallback(() => {
+    router.push("/");
+  }, [router]);
 
   return (
     <div className="flex h-full w-full flex-row items-stretch justify-stretch bg-white">
@@ -83,7 +90,7 @@ export default function PlantDescClient({
       </div>
       <div className="flex h-full max-h-full flex-col overflow-y-auto p-2 pt-14">
         <div className="flex flex-row items-center gap-2">
-          <IconButton title="Back" onClick={() => window.history.back()}>
+          <IconButton title="Back" onClick={onBackButtonClicked}>
             <LeftArrowIcon width={40} height={40} />
           </IconButton>
           <span className="font-bold">Back to search</span>

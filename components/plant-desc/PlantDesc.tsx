@@ -8,8 +8,13 @@ import PlantDescClient from "./PlantDescClient";
 import { redirect } from "next/navigation";
 
 async function getPlantDesc(plantType: string) {
-  const res = await fetch(`http://localhost:3000/api/plants/${plantType}`);
+  const res = await fetch(`http://localhost:3000/api/plants/${plantType}`, {
+    next: {
+      revalidate: 60,
+    },
+  });
   const desc = (await res.json()) as PlantSpecifications;
+  console.log(desc);
   return desc;
 }
 
@@ -25,6 +30,15 @@ async function getSuitabilityScore(
     const { min, max, weight } = specs[key as keyof PlantSpecifications];
     const score = value >= min && value <= max ? 1 : 0;
     const weightedScore = score * weight;
+    console.log({
+      key,
+      value,
+      min,
+      max,
+      weight,
+      score,
+      weightedScore,
+    });
     return acc + weightedScore;
   }, 0);
 }
@@ -39,6 +53,7 @@ export default async function PlantDesc({
     const score = await getSuitabilityScore(currentSpecData, desc);
 
     if (isNaN(score)) {
+      console.log(plantType, desc, currentSpecData, score);
       throw new Error("Invalid score");
     }
 
