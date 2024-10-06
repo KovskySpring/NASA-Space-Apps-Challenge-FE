@@ -1,3 +1,6 @@
+// ! The constants in this file are only mock data,
+// ? should be replaced with real data from the real database.
+
 export type RangedValue = {
   unit: string;
   min: number;
