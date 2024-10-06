@@ -21,6 +21,17 @@ async function getPlantDesc(plantType: string) {
 }
 
 async function getCurrentSpecificationRecord(plantType: PlantType) {
+  // ! MOCK only
+  // ? In production this function should fetch the following
+  // ? timeseries data from GES DISC's Hydrology Data Rods API's:
+  // * GLDAS Thermal
+  // * GLDAS Soil moisture
+  // * GLDAS Rainfall
+  // * MODIS Land-cover
+  // * GEDI Biomass Indices
+  // ? And
+  // * Landsat's Surface Reflectance
+
   return MOCK_SPECIFICATION_RECORD[plantType];
 }
 
